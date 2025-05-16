@@ -29,8 +29,6 @@ data_transforms = {
         transforms.RandomAutocontrast(p=0.3),          
         transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),  
         transforms.ToTensor(),                         
-        #transforms.Normalize(mean = [0.54, 0.39, 0.39],
-        #                     std = [0.25, 0.22, 0.22]), 
         transforms.Normalize(mean = [0.485, 0.456, 0.406],
                              std  = [0.229, 0.224, 0.225]),
         transforms.RandomErasing(p=0.3, scale=(0.02, 0.2), ratio=(0.3, 3.3), value=0),  
@@ -38,41 +36,30 @@ data_transforms = {
     'valid': transforms.Compose([
         transforms.Resize((224, 224)),                  
         transforms.ToTensor(),                          
-        #transforms.Normalize(mean = [0.54, 0.39, 0.39],
-        #                     std = [0.25, 0.22, 0.22]),
         transforms.Normalize(mean = [0.485, 0.456, 0.406],
                              std  = [0.229, 0.224, 0.225]),
     ]),
     'test': transforms.Compose([
         transforms.Resize((224, 224)),                  
         transforms.ToTensor(),                          
-        #transforms.Normalize(mean = [0.54, 0.39, 0.39],
-        #                     std = [0.25, 0.22, 0.22]),
         transforms.Normalize(mean = [0.485, 0.456, 0.406],
                              std  = [0.229, 0.224, 0.225]),
     ])
 }
 
-# =========================
-#  完全随机帧采样
-# =========================
+
 def sample_random_frames(total_frames, num_samples=5):
-    """ 在视频中完全随机抽取 num_samples 帧 """
     if total_frames < num_samples:
-        return list(range(total_frames))  # 如果视频帧数小于所需帧数，则返回所有帧
+        return list(range(total_frames))  
     
-    indices = sorted(random.sample(range(total_frames), num_samples))  # 随机选取 num_samples 帧
+    indices = sorted(random.sample(range(total_frames), num_samples))  
     return indices
 
-# =========================
-#  人脸检测
-# =========================
+
 model = YOLO("yolov5s.pt")  
 
 def detect_face(img, last_valid_face=None):
-    """
-    使用 YOLO 检测人脸，优先选择置信度最高的一个。如果没有检测到，则回退使用 last_valid_face。
-    """
+    
     results = model.predict(source=img, device=0 if torch.cuda.is_available() else 'cpu', verbose=False)
 
     if not results or results[0].boxes is None or len(results[0].boxes) == 0:
@@ -93,19 +80,21 @@ def detect_face(img, last_valid_face=None):
 
 
 
-# =========================
-#  数据集
-# =========================
 class MMDataset(Dataset):
-    def __init__(self,dataset='mosi', mode='train', image_num = 5, generate_num = 1):
-        self.dataset=dataset
+    def __init__(self,args, mode='train'):
+        self.dataset=args.dataset.datasetName
         self.mode = mode
-        self.dataPath = '/scratch/song.xinwe/'+self.dataset+'/unaligned_50.pkl'
-        self.train_mode = 'regression'
-        self.image_num = image_num
+        if self.dataset=='chsims':
+            self.dataPath = 'data/'+self.dataset+'/unaligned_39.pkl'
+        else:
+            self.dataPath = 'data/'+self.dataset+'/unaligned_50.pkl'
+        self.train_mode = args.dataset.train_mode
+        self.image_num = args.dataset.image_num
         self.transform = data_transforms[self.mode]
-        self.seq_lens = [50,50]
-        self.generate_num = generate_num
+        if mode=='train':
+            self.generate_num = 4
+        else:
+            self.generate_num = 1
         self.__init_dataset()
     
     def __init_dataset(self):
@@ -126,11 +115,10 @@ class MMDataset(Dataset):
         self.cleaned_labels = []
         
         self.ids = data[self.mode]['id']
-        self.video_paths = ['/scratch/song.xinwe/'+self.dataset+'/Raw/'+('/').join(video_id.split('$_$'))+'.mp4' for video_id in data[self.mode]['id']]
+        self.video_paths = ['data/'+self.dataset+'/Raw/'+('/').join(video_id.split('$_$'))+'.mp4' for video_id in data[self.mode]['id']]
         self.cleaned_images = []
         
-        #self.__truncated()
-            
+       
 
         for text, audio, label, video_path in tqdm(zip(self.text, self.audio, self.labels, self.video_paths),total = len(self.text),position=0 
                                                    ,leave=True):
@@ -156,11 +144,10 @@ class MMDataset(Dataset):
 
         selected_frames = sorted(random.sample(range(total_frames), self.image_num))
         images = []
-        max_search_window = 3  # 最大偏移距离
+        max_search_window = 3 
         last_valid_face = None
 
         def find_nearby_face(idx):
-            """从邻域帧中寻找能检测到人脸的帧"""
             offsets = [0] + [i for j in range(1, max_search_window + 1) for i in (j, -j)]  # e.g., [0, 1, -1, 2, -2, ...]
             for offset in offsets:
                 neighbor_idx = idx + offset
@@ -172,8 +159,8 @@ class MMDataset(Dataset):
                             return face
                     except Exception as e:
                         continue
-            return None  # 所有邻居都失败
-
+            return None  
+        
         for idx in selected_frames:
             try:
                 frame = vr[idx].asnumpy().astype(np.uint8)
@@ -199,27 +186,6 @@ class MMDataset(Dataset):
         return images
 
 
-        
-    def __truncated(self):
-        def Truncated(modal_features, length):
-            if length == modal_features.shape[1]:
-                return modal_features
-            truncated_feature = []
-            padding = np.array([0 for i in range(modal_features.shape[2])])
-            for instance in modal_features:
-                for index in range(modal_features.shape[1]):
-                    if((instance[index] == padding).all()):
-                        if(index + length >= modal_features.shape[1]):
-                            truncated_feature.append(instance[index:index+length])
-                            break
-                    else:                        
-                        truncated_feature.append(instance[index:index+length])
-                        break
-            truncated_feature = np.array(truncated_feature)
-            return truncated_feature
-                       
-        audio_length, video_length = self.seq_lens 
-        self.audio = Truncated(self.audio, audio_length)
 
     def __len__(self):
         return len(self.cleaned_labels)
