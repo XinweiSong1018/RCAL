@@ -94,7 +94,6 @@ def train(model, train_loader, optimizer, epoch, args):
 
        
 
-        # === 总损失 ===
         loss = l1 + lambda_recon * l2 + lambda_rl * loss_rl
         loss.backward()
         optimizer.step()
@@ -125,7 +124,6 @@ def train(model, train_loader, optimizer, epoch, args):
 
 
 
-# Evaluate 函数
 def evaluate(model, eval_loader, optimizer, epoch, args):
     global best_val_mae
     metric = MetricsTop()
