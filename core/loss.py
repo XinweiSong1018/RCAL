@@ -1,6 +1,10 @@
 import torch
 import torch.nn.functional as F
 
+def emo_loss_fn(output, label):
+    loss_fn = torch.nn.MSELoss()
+    return loss_fn(output, label)
+    
 
 def SupervisedContrastiveLoss(h_v_cls, labels, sigma=0.1):
     """
