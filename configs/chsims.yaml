@@ -1,0 +1,58 @@
+
+base:
+  lr: 0.0001
+  weight_decay: 0.0001
+  batch_size: 64
+  n_epochs: 200
+  num_workers: 8
+  gpu_id: 1
+
+dataset:
+  datasetName: chsims
+  dataPath: /data/chsims/unaligned_39.pkl 
+  train_mode: regression
+
+model:  
+  bert_pretrained: bert-base-chinese
+
+  # Projection Layer Parameters
+  l_input_dim: 768
+  a_input_dim: 33
+  v_input_dim: 512
+  proj_dst_dim: 128
+  vf_drop: 0.1
+  l_proj_drop: 0.0
+  a_proj_drop: 0.0
+  v_proj_drop: 0.1
+
+  # Transformer Parameters
+  token_len: 8
+  token_dim: 128
+  l_input_length: 39
+  a_input_length: 400
+  v_input_length: 5
+  proj_input_dim: 128
+  proj_depth: 1
+  proj_heads: 8
+  proj_mlp_dim: 128
+
+  # Vision Encoder Parameters
+  v_enc_heads: 8
+  v_enc_mlp_dim: 128
+  
+  # Vision Extractor Parameters
+  vfe_drop: 0.0
+
+  # EM_RCAL Block Parameters
+  emrcal_depth: 3
+
+  # Fusion Layer Parameters
+  fusion_heads: 8
+  fusion_mlp_dim: 128
+  fusion_layer_depth: 4
+
+train:
+  moving_baseline: 0.6
+  alpha: 0.9
+  lambda_recon: 0.3
+  lambda_rl: 0.5
