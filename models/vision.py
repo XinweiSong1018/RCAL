@@ -21,7 +21,7 @@ class ResNetWithDropout(nn.Module):
     def __init__(self, dropout_rate=0.3):
         super().__init__()
         resnet18 = models.resnet18(pretrained=True)
-        self.features = nn.Sequential(*list(resnet18.children())[:-1])  # 去掉最后一层 FC
+        self.features = nn.Sequential(*list(resnet18.children())[:-1])
         self.dropout = nn.Dropout(dropout_rate)
 
     def forward(self, x):
