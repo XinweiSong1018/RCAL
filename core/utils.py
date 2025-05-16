@@ -1,8 +1,13 @@
 import gc
+from types import SimpleNamespace
+import torch
+import os
+import csv
+
 
 def clear_memory():
-    torch.cuda.empty_cache()  # 释放 GPU 缓存
-    gc.collect()  # 释放 CPU 内存
+    torch.cuda.empty_cache() 
+    gc.collect()
     
 def count_parameters(model):
     total = sum(p.numel() for p in model.parameters())
@@ -12,15 +17,7 @@ def count_parameters(model):
 
     
 
-def save_validation_metrics(epoch, metrics, save_path="metrics_log_chsims.csv"):
-    """
-    保存每轮验证的指标到 CSV 文件。
-    
-    Args:
-        epoch (int): 当前 epoch
-        metrics (dict): 包含各类验证指标的字典
-        save_path (str): 保存路径
-    """
+def save_validation_metrics(epoch, metrics, save_path):
     file_exists = os.path.exists(save_path)
     header = ["epoch"] + list(metrics.keys())
 
@@ -32,14 +29,13 @@ def save_validation_metrics(epoch, metrics, save_path="metrics_log_chsims.csv"):
 
         
 
-def save_best_model(model, mae, best_val_mae, save_path='best_model.pt'):
-    """Save the model if current mae is better than best_val_mae."""
+def save_best_model(model, mae, best_val_mae, save_path):
     if mae < best_val_mae:
         torch.save(model.state_dict(), save_path)
         print(f"✅ Saved best model (MAE = {mae:.4f}) to {save_path}")
-        return mae  # 返回更新后的 best_val_mae
+        return mae 
     else:
-        return best_val_mae  # 不更新
+        return best_val_mae
 
 
 class AverageMeter(object):
@@ -60,3 +56,10 @@ class AverageMeter(object):
         self.value_sum += value * count
         self.count += count
         self.value_avg = self.value_sum / self.count
+        
+def dict_to_namespace(d):
+    """Recursively converts a dictionary and its nested dictionaries to a Namespace."""
+    for k, v in d.items():
+        if isinstance(v, dict):
+            d[k] = dict_to_namespace(v)
+    return SimpleNamespace(**d)
