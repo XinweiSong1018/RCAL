@@ -1,3 +1,4 @@
+# Import essential libraries for data handling, model loading, image processing, and video reading
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -18,9 +19,12 @@ from ultralytics import YOLO
 
 
 
+# Disable OpenCL to avoid potential conflicts with some OpenCV operations
 import time
 cv2.ocl.setUseOpenCL(False)
 
+# Define image transformations for different dataset splits (train, valid, test)
+# Includes standard resizing, normalization, and data augmentation for training
 data_transforms = {
     'train': transforms.Compose([
         transforms.Resize((224, 224)),                  
@@ -47,7 +51,7 @@ data_transforms = {
     ])
 }
 
-
+# Randomly sample frame indices from a video
 def sample_random_frames(total_frames, num_samples=5):
     if total_frames < num_samples:
         return list(range(total_frames))  
@@ -55,9 +59,10 @@ def sample_random_frames(total_frames, num_samples=5):
     indices = sorted(random.sample(range(total_frames), num_samples))  
     return indices
 
-
+# Load YOLOv5s for face detection from frames
 model = YOLO("yolov5s.pt")  
 
+# Detect face in an image using YOLOv5. Returns cropped face or last valid face if detection fails.
 def detect_face(img, last_valid_face=None):
     
     results = model.predict(source=img, device=0 if torch.cuda.is_available() else 'cpu', verbose=False)
@@ -79,7 +84,7 @@ def detect_face(img, last_valid_face=None):
     return face if face.size > 0 else last_valid_face
 
 
-
+# Custom Dataset class for loading multimodal (text, audio, image) data
 class MMDataset(Dataset):
     def __init__(self,args, mode='train'):
         self.dataset=args.dataset.datasetName
@@ -94,9 +99,9 @@ class MMDataset(Dataset):
         if mode=='train':
             self.generate_num = 4
         else:
-            self.generate_num = 1
+            self.generate_num = 1# data augmentation
         self.__init_dataset()
-    
+    # Initialize the dataset by loading pickled features and processing valid samples
     def __init_dataset(self):
         with open(self.dataPath, 'rb') as f:
             data = pickle.load(f)
@@ -130,7 +135,7 @@ class MMDataset(Dataset):
                     self.cleaned_labels.append(label)
                     self.cleaned_images.append(images)
 
- 
+     # Extract faces from selected frames in a video
     def __load_images(self, video_path):
         try:
             vr = VideoReader(video_path, ctx=cpu())
@@ -146,7 +151,7 @@ class MMDataset(Dataset):
         images = []
         max_search_window = 3 
         last_valid_face = None
-
+  # Try to find nearby frame with valid face if current one fails
         def find_nearby_face(idx):
             offsets = [0] + [i for j in range(1, max_search_window + 1) for i in (j, -j)]  # e.g., [0, 1, -1, 2, -2, ...]
             for offset in offsets:
@@ -160,7 +165,7 @@ class MMDataset(Dataset):
                     except Exception as e:
                         continue
             return None  
-        
+        # Process selected frames
         for idx in selected_frames:
             try:
                 frame = vr[idx].asnumpy().astype(np.uint8)
@@ -179,17 +184,17 @@ class MMDataset(Dataset):
             except Exception as e:
                 print(f"[WARNING] Failed to decode frame {idx} from {video_path}: {e}")
                 images.append(last_valid_face if last_valid_face is not None else np.zeros((224, 224, 3), dtype=np.uint8))
-
+        # Pad frames if not enough were found
         while len(images) < self.image_num:
             images.append(last_valid_face if last_valid_face is not None else np.zeros((224, 224, 3), dtype=np.uint8))
 
         return images
 
 
-
+    # Return total number of usable samples
     def __len__(self):
         return len(self.cleaned_labels)
-
+    # Return a single multimodal sample: text, audio, image sequence, label
     def __getitem__(self, index):
         faces = [Image.fromarray(image) if isinstance(image,np.ndarray) else image for image in self.cleaned_images[index]]
         faces = [self.transform(image) for image in faces]
