@@ -45,11 +45,46 @@ data/
     └── unaligned_39.pkl
 </pre>
 
+## 🌐 Environment
 
+This project is developed and tested in the following environment:
 
+### **🖥️ Hardware**
+- **GPU**: NVIDIA V100-SXM2 (64GB)
 
-## Environment
+### **📦 Key Dependencies**
+- **Python**: 3.8.20  
+- **PyTorch**: 2.2.1  
+- **TorchVision**: 0.17.1  
+- **Torchaudio**: 2.2.1  
+- **CUDA**: 12.1 (cu12)  
+- **cuDNN**: 8.9.2  
+- **NVIDIA CUBLAS**: 12.1.3.1  
+- **NVIDIA NCCL**: 2.19.3  
 
+### **🗃️ Other Important Packages**
+- **transformers**: 4.46.3  
+- **einops**: 0.8.1  
+- **albumentations**: 1.4.18  
+- **opencv-python**: 4.11.0.86  
+- **decord**: 0.6.0  
+- **numpy**: 1.24.4  
+- **scikit-image**: 0.21.0  
+- **seaborn**: 0.13.2  
+
+---
+
+### **⚠️ Reproducibility Notice**
+Training results may vary slightly depending on the hardware configuration and random seeds. This codebase is optimized for NVIDIA **V100-SXM2** GPUs, but should work on other CUDA-enabled devices with sufficient memory.
+
+---
+
+### **🔗 Full Dependency List**
+To recreate the full environment, you can use the provided **`environment.txt`** file:
+
+```bash
+conda create --name myenv --file environment.txt
+```
 
 ## 🚀 Training
 
