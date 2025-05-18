@@ -24,7 +24,25 @@ Please note that the repository is currently under active development, and the c
 
 
 
-## Data Preparation
+## 📁 Data Preparation
+
+
+The raw data for this project is adapted from the **MMSA** repository, which can be found at the following link:
+
+**[MMSA - Multimodal Sentiment Analysis](https://github.com/thuiar/MMSA)**
+
+After downloading and preprocessing the raw data, organize your data directory as follows:
+data/
+├── mosi/
+│ ├── Raw/
+│ └── unaligned_50.pkl
+├── mosei/
+│ ├── Raw/
+│ └── unaligned_50.pkl
+└── chsims/
+├── Raw/
+└── unaligned_39.pkl
+
 
 
 ## Environment
