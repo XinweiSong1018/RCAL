@@ -1,10 +1,3 @@
-'''
-* @name: yolov5s.pt
-* @description: Pre-trained YOLOv5 small model for object detection.
-* The model is used here specifically for face detection in video frames.
-* Source: https://github.com/ultralytics/yolov5
-'''
-
 # Import essential libraries for data handling, model loading, image processing, and video reading
 import torch
 import torch.nn as nn

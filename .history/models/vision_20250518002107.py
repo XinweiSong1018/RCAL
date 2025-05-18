@@ -1,10 +1,3 @@
-'''
-* @name: ResNet-18
-* @description: Pre-trained ResNet-18 model for image feature extraction.
-* The model is used here as a method to extract visual features from video frames.
-* Source: https://github.com/pytorch/vision/tree/main/torchvision/models
-'''
-
 import torch
 from torch import nn
 from .layer import Transformer, CrossTransformerEncoder
