@@ -51,18 +51,20 @@ data/
 ## Environment
 
 
-## Training
+## 🚀 Training
 
-### MOSI
-python train.py --config_file configs/mosi.yaml 
+This repository provides command-line interfaces for training the **EM-RCAL** model on the **MOSI**, **MOSEI**, and **CH-SIMS** datasets. Simply run the following commands:
 
+```bash
+# Train on MOSI
+python train.py --config_file configs/mosi.yaml
 
-### MOSEI
-python train.py --config_file configs/mosei.yaml 
+# Train on MOSEI
+python train.py --config_file configs/mosei.yaml
 
-
-### CHSIMS
-python train.py --config_file configs/chsims.yaml 
+# Train on CH-SIMS
+python train.py --config_file configs/chsims.yaml
+```
 
 
 ## Citation
