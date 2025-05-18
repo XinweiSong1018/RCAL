@@ -32,16 +32,19 @@ The raw data for this project is adapted from the **MMSA** repository, which can
 **[MMSA - Multimodal Sentiment Analysis](https://github.com/thuiar/MMSA)**
 
 After downloading and preprocessing the raw data, organize your data directory as follows:
+<pre>
 data/
 ├── mosi/
-│ ├── Raw/
-│ └── unaligned_50.pkl
+│   ├── Raw/
+│   └── unaligned_50.pkl
 ├── mosei/
-│ ├── Raw/
-│ └── unaligned_50.pkl
+│   ├── Raw/
+│   └── unaligned_50.pkl
 └── chsims/
-├── Raw/
-└── unaligned_39.pkl
+    ├── Raw/
+    └── unaligned_39.pkl
+</pre>
+
 
 
 
