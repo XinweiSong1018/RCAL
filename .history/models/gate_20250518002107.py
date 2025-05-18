@@ -66,7 +66,7 @@ class GateController(nn.Module):
         )
 
     def forward(self, state):
-        temperature = 1.0
+        temperature = 1.0  # Can be annealed during training
         p = torch.sigmoid(self.fc(state) / temperature)  # Get Bernoulli probability
         dist = Bernoulli(probs=p)  # Create stochastic distribution
         action = dist.sample()     # Sample action: 1 (select), 0 (skip)
