@@ -11,6 +11,7 @@ dataset:
   datasetName: chsims
   dataPath: /data/chsims/unaligned_39.pkl 
   train_mode: regression
+  image_num: 5
 
 model:  
   bert_pretrained: bert-base-chinese
