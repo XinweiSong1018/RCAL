@@ -26,7 +26,7 @@ model:
   v_proj_drop: 0.1
 
   # Transformer Parameters
-  token_len: 8
+  token_length: 8
   token_dim: 128
   l_input_length: 39
   a_input_length: 400
