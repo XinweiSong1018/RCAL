@@ -108,6 +108,6 @@ def get_scheduler(model, optimizer, args):
         GradualWarmupScheduler: Learning rate scheduler with warm-up followed by cosine decay
     """
     scheduler_steplr = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=0.9 * args.base.n_epochs)
-    scheduler_warmup = GradualWarmupScheduler(optimizer, multiplier=1, total_epoch=0.1 * args.base.n_epochs, after_scheduler=scheduler_steplr)
+    scheduler_warmup = GradualWarmupScheduler(optimizer, multiplier=1, total_epoch=args.train.warmup_ratio * args.base.n_epochs, after_scheduler=scheduler_steplr)
 
     return scheduler_warmup
