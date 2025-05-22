@@ -57,3 +57,4 @@ train:
   alpha: 0.9
   lambda_recon: 0.3
   lambda_rl: 0.5
+  warmup_ratio: 0.05
