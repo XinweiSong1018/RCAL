@@ -1,13 +1,25 @@
 # EM-RCAL: Explainable Memory-Enhanced Reinforcement-Learned Cross-Attention with Adaptive Learning
 
 
-
 ## Content
+- [Code Structure](#Code-structure)
 - [Note](#Note)
 - [Data Preparation](#Data-preparation)
 - [Environment](#Environment)
 - [Training](#Training)
 - [Citation](#Citation)
+
+## 📁 Code Structure
+The repository is organized as follows:
+<pre>
+├── configs/           # Configuration files for MOSI, MOSEI, CH-SIMS
+├── core/              # Core components: dataset loader, scheduler, losses, metrics, etc.
+├── models/            # Model definitions: EM-RCAL modules, fusion, gating mechanisms
+├── train.py           # Main training + evaluation entry point
+├── environment.txt    # Full Conda environment (Python 3.10 + PyTorch + CUDA)
+├── yolov5su.pt        # Optional: pretrained YOLOv5 checkpoint
+└── README.md          # Project description and usage instructions
+</pre>
 
 
 ## 📌 Note
