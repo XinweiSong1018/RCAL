@@ -57,7 +57,7 @@ This project is developed and tested in the following environment:
 - **PyTorch**: 2.2.1  
 - **TorchVision**: 0.17.1  
 - **Torchaudio**: 2.2.1  
-- **CUDA**: 12.1 (cu12)  
+- **CUDA**: 11.8  
 - **cuDNN**: 8.9.2  
 - **NVIDIA CUBLAS**: 12.1.3.1  
 - **NVIDIA NCCL**: 2.19.3  
