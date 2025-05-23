@@ -17,7 +17,8 @@ The repository is organized as follows:
 ├── models/            # Model definitions: EM-RCAL modules, fusion, gating mechanisms
 ├── train.py           # Main training + evaluation entry point
 ├── environment.txt    # Full Conda environment (Python 3.10 + PyTorch + CUDA)
-├── yolov5su.pt        # Optional: pretrained YOLOv5 checkpoint
+├── yolov5su.pt        # Pretrained YOLOv5 checkpoint
+├── data/              # Three different datasets: MOSI, MOSEI, CH-SIMS   
 └── README.md          # Project description and usage instructions
 </pre>
 
