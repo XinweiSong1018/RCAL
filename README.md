@@ -14,7 +14,7 @@ The repository is organized as follows:
 <pre>
 ├── configs/           # Configuration files for MOSI, MOSEI, CH-SIMS
 ├── core/              # Core components: dataset loader, scheduler, losses, metrics, etc.
-├── models/            # Model definitions: EM-RCAL modules, fusion, gating mechanisms
+├── models/            # Model definitions: RCAL modules, fusion, gating mechanisms
 ├── train.py           # Main training + evaluation entry point
 ├── environment.txt    # Full Conda environment (Python 3.10 + PyTorch + CUDA)
 ├── yolov5su.pt        # Pretrained YOLOv5 checkpoint
@@ -90,7 +90,7 @@ conda create --name myenv --file environment.txt
 
 ## 🚀 Training
 
-This repository provides command-line interfaces for training the **EM-RCAL** model on the **MOSI**, **MOSEI**, and **CH-SIMS** datasets. Simply run the following commands:
+This repository provides command-line interfaces for training the **RCAL** model on the **MOSI**, **MOSEI**, and **CH-SIMS** datasets. Simply run the following commands:
 
 ```bash
 # Train on MOSI
