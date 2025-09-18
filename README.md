@@ -1,4 +1,4 @@
-# EM-RCAL: Explainable Memory-Enhanced Reinforcement-Learned Cross-Attention with Adaptive Learning
+# RCAL: Reinforced Cross-modal Alignment for Multimodal Sentiment Analysis with Sparse Visual Frames
 
 
 ## Content
